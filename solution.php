@@ -58,9 +58,28 @@ function total_number_of_valid_requests($pdo)
 
 }
 
-function dates_with_at_least_n_scores($pdo, $n)
+function dates_with_at_least_n_scores($pdo, $n=0)
 {
     // YOUR CODE GOES HERE
+	//GET DATES FROM SCORES TABLE THAT HAVE AT LEAST $n SCORES;
+
+	$out = array();
+
+	$sql = "SELECT date AS d, COUNT(*) AS c FROM scores 
+			GROUP BY date 
+			ORDER BY date DESC";
+
+	foreach ($pdo->query($sql) as $row) {
+
+		if ($row['c'] >= $n) {
+
+			$out[] = $row['d'];
+
+		}
+
+	}
+
+	return $out;
 }
 
 function users_with_top_score_on_date($pdo, $date)
