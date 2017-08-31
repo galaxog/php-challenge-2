@@ -48,6 +48,14 @@ function check_signature($payload, $signature, $secret=API_SECRET) {
 function total_number_of_valid_requests($pdo)
 {
     // YOUR CODE GOES HERE
+	//GET TOTAL NUMBER OF RECORDS IN TABLE
+
+	$sql = "SELECT COUNT(*) FROM scores";
+
+	$res = $pdo->query($sql)->fetch(PDO::FETCH_BOTH);
+
+	return $res[0];
+
 }
 
 function dates_with_at_least_n_scores($pdo, $n)
