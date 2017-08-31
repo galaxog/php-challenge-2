@@ -9,7 +9,7 @@ function parse_request($request, $secret)
 
 	$out = array();
 
-	$init = explode('.', $request);
+	$init = explode('.', strtr($request, '-_', '+/'));
 	$decoded_sig = base64_decode($init[0]);
 	$decoded = base64_decode($init[1]);
 	$json_decoded = json_decode($decoded, true);
