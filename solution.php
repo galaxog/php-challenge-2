@@ -24,9 +24,9 @@ function parse_request($request, $secret)
 
 		}
 
-		$date_test = date_parse($out[':date']);
+		$date_test = date_parse(@$out[':date']);
 
-		if ($out[':user_id'] && $out[':score'] && $out[':date'] && $date_test && !$date_test['errors']) {
+		if (@$out[':user_id'] && @$out[':score'] && @$out[':date'] && $date_test && !$date_test['errors']) {
 			return (check_signature($decoded, $decoded_sig, $secret)) ? $out : false;
 		} else {
 			return false;
@@ -106,4 +106,37 @@ function users_with_top_score_on_date($pdo, $date)
 function times_user_beat_overall_daily_average($pdo, $user_id)
 {
     // YOUR CODE GOES HERE
+	//GET THE NUMBER OF TIMES THE SPECIFIED USER SCORED ABOVE THE DAILY AVERAGE FOR DAYS WHERE THE USER ACTUALLY HAS A SCORE
+
+	$out = 0;
+	$score_avg = 0;
+	$score_arr = array();
+
+	//GET THE OVERALL DAILY AVERAGE
+	$sql = "SELECT AVG(score) AS a 
+			FROM scores 
+			GROUP BY date ";
+
+	foreach($pdo->query($sql) as $row) {
+
+		$score_arr[] = $row['a'];
+
+	}
+
+	$score_avg += (int)(array_sum($score_arr) / sizeof($score_arr));
+
+	//HOW MANY TIMES HAS THIS USER SCORED ABOVE THE OVERALL AVERAGE
+	$sql1 = "SELECT score as s  
+			FROM scores 
+			WHERE user_id = $user_id 
+			AND score > $score_avg ";
+
+	foreach ($pdo->query($sql1) as $row2) {
+
+		$out++;
+
+	}
+
+	return $out;
+
 }
