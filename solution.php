@@ -85,6 +85,22 @@ function dates_with_at_least_n_scores($pdo, $n=0)
 function users_with_top_score_on_date($pdo, $date)
 {
     // YOUR CODE GOES HERE
+	//GET THE USERS WITH THE TOP 3 SCORES FOR A SPECIFIED DATE
+
+	$out = array();
+
+	$sql = "SELECT user_id 
+			FROM scores 
+			WHERE date = '$date' 
+			ORDER BY score DESC 
+			LIMIT 3";
+
+	foreach($pdo->query($sql) as $row) {
+		$out[] = $row['user_id'];
+	}
+
+	return $out;
+
 }
 
 function times_user_beat_overall_daily_average($pdo, $user_id)
