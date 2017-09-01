@@ -126,16 +126,13 @@ function times_user_beat_overall_daily_average($pdo, $user_id)
 	$score_avg += (int)(array_sum($score_arr) / sizeof($score_arr));
 
 	//HOW MANY TIMES HAS THIS USER SCORED ABOVE THE OVERALL AVERAGE
-	$sql1 = "SELECT score as s  
+	$sql1 = "SELECT COUNT(score) as s  
 			FROM scores 
 			WHERE user_id = $user_id 
 			AND score > $score_avg ";
 
-	foreach ($pdo->query($sql1) as $row2) {
-
-		$out++;
-
-	}
+	$row2 = $pdo->query($sql1)->fetch(PDO::FETCH_BOTH);
+	$out = $row2[0];
 
 	return $out;
 
