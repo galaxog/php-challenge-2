@@ -118,7 +118,7 @@ function times_user_beat_overall_daily_average($pdo, $user_id)
 	foreach($pdo->query($sql) as $row) {
 
 		//CHECK THEIR HIGHEST SCORE FOR EACH DAY
-		$sql1 = "SELECT MAX(score) 
+		$sql1 = "SELECT AVG(score) 
 				FROM scores 
 				WHERE user_id = $user_id 
 				AND `date` = '".$row['d']."' 
@@ -131,7 +131,7 @@ function times_user_beat_overall_daily_average($pdo, $user_id)
 		}
 
 	}
-
+	echo $out."\n";
 	return $out;
 
 }
