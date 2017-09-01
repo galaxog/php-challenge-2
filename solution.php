@@ -109,30 +109,28 @@ function times_user_beat_overall_daily_average($pdo, $user_id)
 	//GET THE NUMBER OF TIMES THE SPECIFIED USER SCORED ABOVE THE DAILY AVERAGE FOR DAYS WHERE THE USER ACTUALLY HAS A SCORE
 
 	$out = 0;
-	$score_avg = 0;
-	$score_arr = array();
 
 	//GET THE OVERALL DAILY AVERAGE
-	$sql = "SELECT AVG(score) AS a 
+	$sql = "SELECT AVG(score) AS a, date AS d 
 			FROM scores 
 			GROUP BY date ";
 
 	foreach($pdo->query($sql) as $row) {
 
-		$score_arr[] = $row['a'];
+		//CHECK THEIR HIGHEST SCORE FOR EACH DAY
+		$sql1 = "SELECT MAX(score) 
+				FROM scores 
+				WHERE user_id = $user_id 
+				AND `date` = '".$row['d']."' 
+				GROUP BY date";
+
+		$row2 = $pdo->query($sql1)->fetch(PDO::FETCH_BOTH);
+
+		if ((int)$row['a'] < $row2[0]) {
+			$out ++;
+		}
 
 	}
-
-	$score_avg += (int)(array_sum($score_arr) / sizeof($score_arr));
-
-	//HOW MANY TIMES HAS THIS USER SCORED ABOVE THE OVERALL AVERAGE
-	$sql1 = "SELECT COUNT(score) as s  
-			FROM scores 
-			WHERE user_id = $user_id 
-			AND score > $score_avg ";
-
-	$row2 = $pdo->query($sql1)->fetch(PDO::FETCH_BOTH);
-	$out = $row2[0];
 
 	return $out;
 
