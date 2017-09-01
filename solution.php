@@ -131,7 +131,7 @@ function times_user_beat_overall_daily_average($pdo, $user_id)
 		}
 
 	}
-	echo $out."\n";
+
 	return $out;
 
 }
